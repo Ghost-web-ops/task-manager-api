@@ -6,7 +6,7 @@ const router = express.Router();
 
 // --- GET /api/boards/:boardId/lists ---
 // جلب كل القوائم (مع البطاقات بداخلها) للوحة معينة
-router.get('/boards/:boardId/lists', authMiddleware, async (req, res) => {
+router.get('/boards', authMiddleware, async (req, res) => {
   try {
     const { boardId } = req.params;
 

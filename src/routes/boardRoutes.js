@@ -7,14 +7,20 @@ const router = express.Router();
 // --- GET /api/boards ---
 // جلب كل اللوحات الخاصة بالمستخدم الحالي
 // هذا المسار محمي، سيتم تنفيذ authMiddleware أولاً
-router.get('/boards', authMiddleware, async (req, res) => {
+router.get('/boards/:boardId', authMiddleware, async (req, res) => {
   try {
-    // req.user.id يأتي من الـ middleware بعد التحقق من التوكن
-    const allBoards = await pool.query(
-      'SELECT * FROM boards WHERE user_id = $1 ORDER BY created_at DESC',
-      [req.user.id]
+    const { boardId } = req.params;
+    const userId = req.user.id;
+
+    const boardResult = await pool.query(
+      'SELECT * FROM boards WHERE id = $1 AND user_id = $2',
+      [boardId, userId]
     );
-    res.json(allBoards.rows);
+
+    if (boardResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Board not found or user not authorized.' });
+    }
+    res.json(boardResult.rows[0]);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
