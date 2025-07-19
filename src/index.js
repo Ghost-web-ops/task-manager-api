@@ -10,6 +10,7 @@ import passport from 'passport';
 import './passport-setup.js';
 
 const app = express();
+app.set('trust proxy', 1); // ✅ Add this line
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
