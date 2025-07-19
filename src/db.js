@@ -9,7 +9,7 @@ const pool = new Pool({
   database: "taskManagementApp",
   password: "OmarYasser011",
   port: 5432,
-//   connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
 });
 
 export default pool;
