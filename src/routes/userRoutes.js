@@ -102,10 +102,11 @@ router.get(
     const token = jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '7d' }
     );
     // إعادة توجيه المستخدم إلى الواجهة الأمامية مع إرسال التوكن
-    res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_URL}/google-callback?token=${token}`);
+   // This is the line inside your /api/auth/google/callback route
+res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_UR}/google-callback?token=${token}`);
   }
 );
 
