@@ -37,6 +37,20 @@ router.get('/boards/:boardId/lists', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/lists/:listId', authMiddleware, async (req, res) => {
+  try {
+    const { listId } = req.params;
+    const listResult = await pool.query('SELECT * FROM lists WHERE id = $1', [listId]);
+    if (listResult.rows.length === 0) { 
+      return res.status(404).json({ error: 'List not found.' });
+    }
+    res.json(listResult.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // --- POST /api/lists ---
 // إنشاء قائمة جديدة
