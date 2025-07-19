@@ -20,11 +20,7 @@ app.use(cors(
   allowedHeaders: ["Content-Type", "Authorization"],}
 ));
 app.use(passport.initialize());
-app.use(express.json({
-  origin: "https://task-manager-frontend-alna.vercel.app", 
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', userRoutes);
 app.use('/api', boardRoutes);
