@@ -14,12 +14,7 @@ app.set('trust proxy', 1); // ✅ Add this line
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
-app.use(cors(
-{   origin: "*", // ⚠️ Replace with your Vercel URL
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}
-));
+app.use(cors());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
