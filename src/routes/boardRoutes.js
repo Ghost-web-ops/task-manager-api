@@ -42,5 +42,70 @@ router.post('/boards', authMiddleware, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+router.delete('/boards/:boardId', authMiddleware, async (req, res) => {
+  try {
+    const { boardId } = req.params;
+
+    // تحقق من وجود اللوحة
+    const boardResult = await pool.query('SELECT * FROM boards WHERE id = $1 AND user_id = $2', [boardId, req.user.id]);
+    if (boardResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Board not found or you do not have permission to delete it.' });
+    }
+
+    // حذف اللوحة
+    await pool.query('DELETE FROM boards WHERE id = $1', [boardId]);
+
+    res.json({ message: 'Board deleted successfully.' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  } 
+});
+router.put('/boards/:boardId', authMiddleware, async (req, res) => {
+  try {
+    const { boardId } = req.params;
+    const { title } = req.body;
+
+    // تحقق من وجود اللوحة
+    const boardResult = await pool.query('SELECT * FROM boards WHERE id = $1 AND user_id = $2', [boardId, req.user.id]);
+    if (boardResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Board not found or you do not have permission to update it.' });
+    }
+
+    // تحديث عنوان اللوحة
+    const updatedBoard = await pool.query(
+      'UPDATE boards SET title = $1 WHERE id = $2 RETURNING *',
+      [title, boardId]
+    );
+
+    res.json(updatedBoard.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+router.patch('/boards/:boardId', authMiddleware, async (req, res) => {
+  try {
+    const { boardId } = req.params;
+    const { title } = req.body;
+
+    // تحقق من وجود اللوحة
+    const boardResult = await pool.query('SELECT * FROM boards WHERE id = $1 AND user_id = $2', [boardId, req.user.id]);
+    if (boardResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Board not found or you do not have permission to update it.' });
+    }
+
+    // تحديث عنوان اللوحة
+    const updatedBoard = await pool.query(
+      'UPDATE boards SET title = $1 WHERE id = $2 RETURNING *',
+      [title, boardId]
+    );
+
+    res.json(updatedBoard.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
 
 export default router;

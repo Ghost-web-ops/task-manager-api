@@ -42,5 +42,61 @@ router.patch('/cards/:cardId', authMiddleware, async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+router.patch('/cards/:cardId', authMiddleware, async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        const { title, description, list_id, order } = req.body;
+
+        // بناء الاستعلام بشكل ديناميكي لتحديث الحقول المتاحة فقط
+        const fields = [];
+        const values = [];
+        let queryIndex = 1;
+
+        if (title !== undefined) {
+            fields.push(`title = $${queryIndex++}`);
+            values.push(title);
+        }
+        if (description !== undefined) {
+            fields.push(`description = $${queryIndex++}`);
+            values.push(description);
+        }
+        if (list_id !== undefined) {
+            fields.push(`list_id = $${queryIndex++}`);
+            values.push(list_id);
+        }
+        if (order !== undefined) {
+            fields.push(`"order" = $${queryIndex++}`);
+            values.push(order);
+        }
+        
+        if (fields.length === 0) {
+            return res.status(400).json({ error: 'No fields to update provided.' });
+        }
+
+        const queryString = `UPDATE cards SET ${fields.join(', ')} WHERE id = $${queryIndex} RETURNING *`;
+        values.push(cardId);
+        
+        const updatedCard = await pool.query(queryString, values);
+
+        res.json(updatedCard.rows[0]);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+// ✅ --- DELETE /api/cards/:cardId (جديد) ---
+// لحذف بطاقة
+router.delete('/cards/:cardId', authMiddleware, async (req, res) => {
+    try {
+        const { cardId } = req.params;
+        await pool.query('DELETE FROM cards WHERE id = $1', [cardId]);
+        res.json({ message: 'Card deleted successfully.' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
+});
 
 export default router;

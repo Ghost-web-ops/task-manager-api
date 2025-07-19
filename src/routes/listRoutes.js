@@ -53,6 +53,45 @@ router.post('/lists', authMiddleware, async (req, res) => {
       res.status(500).send('Server error');
     }
 });
+router.patch('/lists/:listId', authMiddleware, async (req, res) => {
+  try {
+    const { listId } = req.params;
+    const { title, order } = req.body; // البيانات الجديدة
+
+    const updatedList = await pool.query(
+      'UPDATE lists SET title = $1, "order" = $2 WHERE id = $3 RETURNING *',
+      [title, order, listId]
+    );
+
+    if (updatedList.rows.length === 0) {
+      return res.status(404).json({ error: 'List not found' });
+    }
+    res.json(updatedList.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+router.delete('/lists/:listId', authMiddleware, async (req, res) => {
+  try {
+    const { listId } = req.params;
+
+    // تحقق من وجود القائمة
+    const listResult = await pool.query('SELECT * FROM lists WHERE id = $1', [listId]);
+    if (listResult.rows.length === 0) {
+      return res.status(404).json({ error: 'List not found.' });
+    }
+
+    // حذف القائمة
+    await pool.query('DELETE FROM lists WHERE id = $1', [listId]);
+
+    res.json({ message: 'List deleted successfully.' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
+  }
+});
+
 
 
 export default router;
