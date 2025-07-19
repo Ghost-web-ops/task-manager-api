@@ -15,9 +15,10 @@ const PORT = process.env.PORT || 5000;
 
 // Middlewares
 app.use(cors(
-{   origin: "https://task-manager-frontend-alna.vercel.app", // ⚠️ Replace with your Vercel URL
+{   origin: "*", // ⚠️ Replace with your Vercel URL
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],}
+  allowedHeaders: ["Content-Type", "Authorization"],
+}
 ));
 app.use(passport.initialize());
 app.use(express.json());
