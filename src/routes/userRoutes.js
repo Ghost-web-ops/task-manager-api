@@ -104,9 +104,8 @@ router.get(
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-
     // إعادة توجيه المستخدم إلى الواجهة الأمامية مع إرسال التوكن
-    res.redirect(`http://localhost:3000/google-callback?token=${token}`);
+    res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_URL}/google-callback?token=${token}`);
   }
 );
 
