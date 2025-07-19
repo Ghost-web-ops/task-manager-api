@@ -105,7 +105,7 @@ router.get(
     );
     // إعادة توجيه المستخدم إلى الواجهة الأمامية مع إرسال التوكن
    // This is the line inside your /api/auth/google/callback route
-res.redirect(`${process.env.NEXT_PUBLIC_API_BASE_UR}/google-callback?token=${token}`);
+res.redirect(`${process.env.NEXT_PUBLIC_API_URL}/google-callback?token=${token}`);
   }
 );
 
