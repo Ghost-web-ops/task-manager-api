@@ -7,7 +7,7 @@ import passport from 'passport';
 const router = express.Router();
 
 // POST /api/register
-router.post('/register', authMiddleware, async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     // 1. استخلاص البيانات من جسم الطلب
     const { username, email, password } = req.body;
@@ -41,7 +41,7 @@ router.post('/register', authMiddleware, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-router.post('/login', authMiddleware, async (req, res) => {
+router.post('/login',  async (req, res) => {
   try {
     // 1. استخلاص البيانات من الطلب
     const { email, password } = req.body;
