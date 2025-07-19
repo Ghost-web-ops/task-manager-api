@@ -2,7 +2,6 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import pool from '../db.js'; // استيراد الاتصال بقاعدة البيانات
 import jwt from 'jsonwebtoken';
-import authMiddleware from '../middleware/auth.js';
 import passport from 'passport';
 const router = express.Router();
 
