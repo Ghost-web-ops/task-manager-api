@@ -56,6 +56,9 @@ router.post('/login',  async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials.' }); // لا تخبر المهاجم أن الإيميل غير موجود
     }
     const user = userResult.rows[0];
+     if (user.google_id && !user.password_hash) {
+      return res.status(401).json({ error: 'This account was created with Google. Please use Sign in with Google.' });
+    }
 
     // 4. مقارنة كلمة المرور المُرسلة مع الهاش المخزن
     const isMatch = await bcrypt.compare(password, user.password_hash);
